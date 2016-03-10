@@ -17,7 +17,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var apiKeys = ("page","results")
     var apiKeysResultsKey = (poster_path:"poster_path",adult:"adult",overview:"overview",release_date:"release_date",genre_ids:"genre_ids",id:"id",original_title:"original_title",original_language:"original_language",title:"title",backdrop_path:"backdrop_path",popularity:"popularity",vote_count:"vote_count",video:"video",vote_average:"vote_average")
     
-    
+
     var baseUrl = "http://image.tmdb.org/t/p/w500/"
     
     override func viewDidLoad() {
@@ -50,10 +50,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return movies?.count ?? 0
