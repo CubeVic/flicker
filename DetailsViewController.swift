@@ -12,10 +12,10 @@ import AFNetworking
 class DetailsViewController: UIViewController {
 
     @IBOutlet weak var posterImageView: UIImageView!
-    
     @IBOutlet weak var titleLabel: UILabel!
-    
     @IBOutlet weak var overviewLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var infoView: UIView!
     
     var movies: NSDictionary!
     
@@ -23,12 +23,15 @@ class DetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-            print(movies)
-        let image = movies["imageUrl"] as! NSURL
-        posterImageView.setImageWithURL(image)
+        
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: infoView.frame.origin.y + infoView.frame.height)
+        
+        if let image = movies["imageUrl"] as? NSURL {
+            posterImageView.setImageWithURL(image)}
         titleLabel.text = movies["title"] as! String
+        //titleLabel.sizeToFit()
         overviewLabel.text = movies["overview"] as! String
-
+        overviewLabel.sizeToFit()
         
         // Do any additional setup after loading the view.
     }
