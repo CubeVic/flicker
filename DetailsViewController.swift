@@ -24,15 +24,23 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // geting the long of the scroll view
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: infoView.frame.origin.y + infoView.frame.height)
         
+        posterImageView.alpha = 0
+        
         if let image = movies["imageUrl"] as? NSURL {
-            posterImageView.setImageWithURL(image)}
+            UIView.beginAnimations("fade in", context: nil)
+            UIView.setAnimationDuration(1)
+            posterImageView.alpha = 1
+            UIView.commitAnimations()
+            posterImageView.setImageWithURL(image)
+        }
+        
         titleLabel.text = movies["title"] as! String
         //titleLabel.sizeToFit()
         overviewLabel.text = movies["overview"] as! String
         overviewLabel.sizeToFit()
-        
         // Do any additional setup after loading the view.
     }
 
