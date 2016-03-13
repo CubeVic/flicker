@@ -1,8 +1,8 @@
-# Project 1 - *Flicker* ---- in progress
+# Project 1 - *Flicker* 
 
 **Flicker** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **10** hours spent in total
+Time spent: **18+** hours spent in total
 
 ## User Stories
 
@@ -26,19 +26,24 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [X] use SwiftHEXColors for manage the colors
+- [X] Customize the StatusBar text color
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='walkthrough_NetworkError.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+* i do try to add the searchBar but i couldn't manage the search intent, i did get to the point to understand how to implement the functions necessary to do it :(
+* i couldn't implemente the UICollectionView in the same MoviesViewControlers :(
+* i manage to customize the tabBar and the NavigationBar, as Well as the StatusBar but i couldn't reach the level i wanted, there is still little confusing :( 
+*  i thing my code is still really messy i wanted to implement a model to handle the network request but i face probles to call the function :(
 
 ## License
 
