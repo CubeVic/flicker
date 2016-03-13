@@ -17,6 +17,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var infoView: UIView!
     
+    @IBOutlet weak var languageLabel: UILabel!
     var movies: NSDictionary!
     
     
@@ -38,29 +39,17 @@ class DetailsViewController: UIViewController {
         }
         
         titleLabel.text = movies["title"] as! String
-        //titleLabel.sizeToFit()
+        titleLabel.sizeToFit()
+        
         overviewLabel.text = movies["overview"] as! String
         overviewLabel.sizeToFit()
-        // Do any additional setup after loading the view.
+        
+        var language = movies["original_language"] as! String
+        languageLabel.text = language.uppercaseString
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.
-        print("Prepare segueway")
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    
-*/
 }

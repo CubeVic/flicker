@@ -13,6 +13,7 @@ import MBProgressHUD
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var errorNetworkView: UIView!
     var movies: [NSDictionary]?
@@ -33,25 +34,24 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             vote_average:"vote_average")
     
     var endPoint: String! =  String()
-    //let endPoint: String! =  "now_playing"
     var baseUrl = "http://image.tmdb.org/t/p/w500/"
+    
+    var colorBlack: UIColor = UIColor.blackColor()
+    var colorWhite: UIColor = UIColor.whiteColor()
+    var colorPrincipal: UIColor = UIColor(hexString: "#3F51B5")!
+    var colorSecundary: UIColor = UIColor(hexString: "#E3F2FD")!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let navigationBar = navigationController?.navigationBar
-        navigationBar?.tintColor = UIColor(red: 1.0, green: 0.5, blue: 0.5, alpha: 0.5)
-        navigationController?.navigationBar.tintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
         tableView.dataSource = self
         tableView.delegate = self
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
+        
         netWorkRequest()
-        
-
-        
         
     }
 
@@ -69,7 +69,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
        
-        
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 if let data = dataOrNil {
@@ -100,7 +99,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegate:nil,
             delegateQueue:NSOperationQueue.mainQueue()
         )
-
+        
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
@@ -135,32 +135,65 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         //cell.selectionStyle = .None
         let backgroundView = UIView(frame: cell.frame)
-        backgroundView.backgroundColor = UIColor(red: 0.0, green: 0.47, blue: 0.788, alpha: 0.8)
+        backgroundView.backgroundColor = colorSecundary
         cell.selectedBackgroundView = backgroundView
         cell.posterView.alpha = 0
         let results = getResults(indexPath)
-        cell.titleLabel.text = results[apiKeysResultsKey.title] as! String
-        cell.overviewLabel.text = results[apiKeysResultsKey.overview] as! String
+        cell.titleLabel.text = results[apiKeysResultsKey.title] as? String
+       // cell.titleLabel.sizeToFit()
+        cell.overviewLabel.text = results[apiKeysResultsKey.overview] as? String
+        let language = results[apiKeysResultsKey.original_language] as? String
+        cell.languageLabel.text = language!.uppercaseString
+        
+        cell.voteAverageLabel.text = results[apiKeysResultsKey.vote_average] as? String
         imageFadeIn(cell)
-        cell.posterView.setImageWithURL(results["imageUrl"] as! NSURL)
+        
+        let imageRequest = NSURLRequest(URL: results["imageUrl"] as! NSURL)
+        
+        cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage: nil,
+            success: { (imageRequest, imageResponse, image) -> Void in
+                
+                // imageResponse will be nil if the image is cached
+                if imageResponse != nil {
+                    print("Image was NOT cached, fade in image")
+                    cell.posterView.alpha = 0.0
+                    cell.posterView.image = image
+                    UIView.animateWithDuration(0.3, animations: { () -> Void in
+                        cell.posterView.alpha = 1.0
+                    })
+                } else {
+                    print("Image was cached so just update the image")
+                    cell.posterView.image = image
+                }
+            },
+            failure: { (imageRequest, imageResponse, error) -> Void in
+                // do something for the failure condition
+        })
+        
+        
         return cell
     }
     
     func getResults(indexPath: NSIndexPath) -> NSDictionary {
+        
         let movie = movies![indexPath.row]
         let title = movie[apiKeysResultsKey.title] as! String
         let overview = movie[apiKeysResultsKey.overview] as! String
+        let originalLanguage = movie[apiKeysResultsKey.original_language] as! String
+        let vote_average = String(movie[apiKeysResultsKey.vote_average] as! Double)
         let base = baseUrl
         
         if let posterPath = movie[apiKeysResultsKey.poster_path] as? String {
             let imageUrl = NSURL(string: base + posterPath)
-            let result = [apiKeysResultsKey.title:title,apiKeysResultsKey.overview:overview,"imageUrl":imageUrl!]
+            let result = [apiKeysResultsKey.title:title,apiKeysResultsKey.overview:overview,"imageUrl":imageUrl!,apiKeysResultsKey.original_language: originalLanguage, apiKeysResultsKey.vote_average:vote_average]
             return result
         } else {
-            let result = [apiKeysResultsKey.title:title,apiKeysResultsKey.overview:overview]
+            let result = [apiKeysResultsKey.title:title,apiKeysResultsKey.overview:overview,apiKeysResultsKey.original_language: originalLanguage, apiKeysResultsKey.vote_average:vote_average]
             return result
         }
     }
+    
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let cell = sender as! UITableViewCell // who is sender the info
@@ -170,7 +203,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let detailsViewController = segue.destinationViewController as! DetailsViewController // set the destination
         detailsViewController.movies = results // give the info to the var in  detailsViewController
-
     }
     
     override func viewWillAppear(animated: Bool) {

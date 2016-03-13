@@ -7,11 +7,17 @@
 //
 
 import UIKit
+import SwiftHEXColors
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var colorBlack: UIColor = UIColor.blackColor()
+    var colorWhite: UIColor = UIColor.whiteColor()
+    var colorPrincipal: UIColor = UIColor(hexString: "#3F51B5")!
+    var colorSecundary: UIColor = UIColor(hexString: "#E3F2FD")!
+    
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -37,10 +43,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabBarController = UITabBarController()
         //put the number of view in the tab
         tabBarController.viewControllers = [nowPlayingNavigationController,topRatedNavigationController]
-        tabBarController.tabBar.selectedImageTintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-        tabBarController.tabBar.barTintColor = UIColor(red: 0.0, green: 0.47, blue: 0.788, alpha: 1)
-        tabBarController.tabBar.translucent = true
-        tabBarController.tabBar.tintColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
+        
+        UINavigationBar.appearance().barTintColor = colorPrincipal
+        UINavigationBar.appearance().tintColor = colorWhite
+        UINavigationBar.appearance().alpha  = 0.8
+        UINavigationBar.appearance().translucent = true
+        
+        UITabBar.appearance().tintColor = colorWhite
+        UITabBar.appearance().barTintColor = colorPrincipal
+        UITabBar.appearance().alpha = 0.8
+       
         //set the tab bar in the root view controller
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
